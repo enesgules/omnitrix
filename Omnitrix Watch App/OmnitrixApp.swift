@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct Omnitrix_Watch_AppApp: App {
+struct OmnitrixWatchApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
