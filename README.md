@@ -57,7 +57,7 @@ cd omnitrix-watch-app
 
 2. Open in Xcode
 ```bash
-open "Omnitrix Watch App.xcodeproj"
+open Omnitrix.xcodeproj
 ```
 
 3. Select Apple Watch simulator and run (⌘R)
