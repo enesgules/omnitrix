@@ -8,133 +8,147 @@
 import SwiftUI
 import WatchKit
 
+enum OmnitrixState {
+    case inactive      // Initial state - no alien
+    case selecting     // Choosing an alien
+    case transformed   // Transformed with timer
+}
+
 struct ContentView: View {
+    @State private var state: OmnitrixState = .inactive
     @State private var selectedAlienIndex = 0
-    @State private var isTransformed = false
-    @State private var crownRotation: Double = 0
-    @State private var pulseScale: CGFloat = 1.0
-    @State private var glowIntensity: Double = 0.0
-    @State private var timeRemaining: TimeInterval = 600 // 10 minutes in seconds
+    @State private var crownValue: Double = 0
+    @State private var timeRemaining: TimeInterval = 20
     @State private var timer: Timer?
+    @State private var pulseAnimation = false
     
     let aliens = Alien.sampleAliens
-    let transformationDuration: TimeInterval = 600 // 10 minutes
+    let transformationDuration: TimeInterval = 20
     
     var currentAlien: Alien {
         aliens[selectedAlienIndex]
+    }
+    
+    var timerProgress: Double {
+        timeRemaining / transformationDuration
     }
     
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
             
-            // Transformation flash overlay
-            if isTransformed {
-                Color.green
-                    .opacity(glowIntensity)
-                    .ignoresSafeArea()
-                    .transition(.opacity)
-            }
-            
-            VStack(spacing: 12) {
-                // Top label with timer
-                if isTransformed {
-                    VStack(spacing: 2) {
-                        Text("TRANSFORMED")
-                            .font(.caption2)
-                            .fontWeight(.bold)
-                            .foregroundColor(currentAlien.color)
-                        
-                        Text(timeString(from: timeRemaining))
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                            .foregroundColor(timeRemaining < 60 ? .red : .green)
-                            .monospacedDigit()
-                    }
-                    .padding(.top, 8)
-                } else {
-                    Text("OMNITRIX")
-                        .font(.caption2)
-                        .fontWeight(.bold)
-                        .foregroundColor(.green)
-                        .padding(.top, 8)
-                }
-                
-                Spacer()
-                
-                // Main Omnitrix Display - One Alien at a Time
-                ZStack {
-                    // Outer ring (pulsing green)
-                    Circle()
-                        .stroke(Color.green, lineWidth: 3)
-                        .frame(width: 110, height: 110)
-                        .scaleEffect(isTransformed ? pulseScale : 1.0)
-                        .shadow(color: .green.opacity(glowIntensity), radius: 20)
-                    
-                    // Inner ring
-                    Circle()
-                        .stroke(currentAlien.color.opacity(0.5), lineWidth: 2)
-                        .frame(width: 90, height: 90)
-                        .scaleEffect(isTransformed ? pulseScale : 1.0)
-                    
-                    // Alien silhouette/icon
-                    ZStack {
-                        Circle()
-                            .fill(currentAlien.color)
-                            .frame(width: 60, height: 60)
-                            .shadow(color: currentAlien.color.opacity(glowIntensity), radius: 30)
-                        
-                        Image(systemName: currentAlien.symbolName)
-                            .font(.system(size: 28, weight: .bold))
-                            .foregroundColor(.black)
-                    }
-                    .scaleEffect(isTransformed ? pulseScale : 1.0)
-                    .rotationEffect(isTransformed ? .degrees(360) : .degrees(0))
-                }
-                
-                // Alien name
-                Text(currentAlien.name.uppercased())
-                    .font(.caption)
-                    .fontWeight(.bold)
-                    .foregroundColor(currentAlien.color)
-                    .padding(.top, 8)
-                
-                // Species subtitle
-                Text(currentAlien.species)
-                    .font(.caption2)
-                    .foregroundColor(.secondary)
-                
-                Spacer()
-                
-                // Slam Down Button
-                Button(action: {
-                    // Transform action with animation
-                    performTransformation()
-                }) {
-                    ZStack {
-                        Circle()
-                            .fill(Color.green)
-                            .frame(width: 50, height: 50)
-                        
-                        Image(systemName: "hand.point.down.fill")
-                            .font(.system(size: 20, weight: .bold))
-                            .foregroundColor(.black)
-                    }
-                }
-                .buttonStyle(PlainButtonStyle())
-                .padding(.bottom, 8)
-                
-                // Instruction text
-                Text(isTransformed ? "TRANSFORMED!" : "Slam Down to Transform")
-                    .font(.caption2)
-                    .foregroundColor(isTransformed ? .green : .gray)
-                    .padding(.bottom, 4)
+            switch state {
+            case .inactive:
+                inactiveView
+            case .selecting:
+                selectingView
+            case .transformed:
+                transformedView
             }
         }
         .navigationBarHidden(true)
+    }
+    
+    // MARK: - Inactive State (Initial)
+    var inactiveView: some View {
+        VStack {
+            Spacer()
+            
+            // Omnitrix logo - tap to activate
+            Button(action: {
+                activateSelection()
+            }) {
+                ZStack {
+                    Circle()
+                        .stroke(Color.green, lineWidth: 4)
+                        .frame(width: 100, height: 100)
+                    
+                    Circle()
+                        .fill(Color.green)
+                        .frame(width: 40, height: 40)
+                    
+                    Image(systemName: "bolt.fill")
+                        .font(.title2)
+                        .foregroundColor(.black)
+                }
+                .scaleEffect(pulseAnimation ? 1.05 : 1.0)
+            }
+            .buttonStyle(PlainButtonStyle())
+            
+            Spacer()
+            
+            Text("Tap to Activate")
+                .font(.caption)
+                .foregroundColor(.gray)
+                .padding(.bottom, 16)
+        }
+        .onAppear {
+            withAnimation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true)) {
+                pulseAnimation = true
+            }
+        }
+    }
+    
+    // MARK: - Selecting State
+    var selectingView: some View {
+        VStack(spacing: 8) {
+            Text("SELECT ALIEN")
+                .font(.caption2)
+                .foregroundColor(.green)
+                .padding(.top, 8)
+            
+            Spacer()
+            
+            // Alien display with swipe support
+            TabView(selection: $selectedAlienIndex) {
+                ForEach(0..<aliens.count, id: \.self) { index in
+                    VStack(spacing: 12) {
+                        ZStack {
+                            Circle()
+                                .fill(aliens[index].color)
+                                .frame(width: 80, height: 80)
+                            
+                            Image(systemName: aliens[index].symbolName)
+                                .font(.system(size: 36, weight: .bold))
+                                .foregroundColor(.black)
+                        }
+                        
+                        Text(aliens[index].name.uppercased())
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundColor(aliens[index].color)
+                        
+                        Text(aliens[index].species)
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                    .tag(index)
+                }
+            }
+            .tabViewStyle(.verticalPage)
+            .frame(height: 150)
+            
+            Spacer()
+            
+            // Transform button
+            Button(action: {
+                transform()
+            }) {
+                Text("TRANSFORM")
+                    .font(.caption)
+                    .fontWeight(.bold)
+                    .foregroundColor(.black)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 8)
+                    .background(Color.green)
+                    .cornerRadius(20)
+            }
+            .buttonStyle(PlainButtonStyle())
+            .padding(.bottom, 16)
+        }
         .focusable(true)
         .digitalCrownRotation(
-            $crownRotation,
+            $crownValue,
             from: 0,
             through: Double(aliens.count - 1),
             by: 1,
@@ -142,96 +156,111 @@ struct ContentView: View {
             isContinuous: false,
             isHapticFeedbackEnabled: true
         )
-        .onChange(of: crownRotation) { oldValue, newValue in
+        .onChange(of: crownValue) { oldValue, newValue in
             selectedAlienIndex = Int(newValue.rounded())
         }
     }
     
-    // Transformation animation sequence
-    func performTransformation() {
-        // Haptic feedback - Strong tap for transformation
-        WKInterfaceDevice.current().play(.success)
-        
-        // Reset timer
-        timeRemaining = transformationDuration
-        
-        // Initial flash
-        withAnimation(.easeIn(duration: 0.1)) {
-            glowIntensity = 0.8
-        }
-        
-        // Pulse and rotation
-        withAnimation(.spring(response: 0.4, dampingFraction: 0.5)) {
-            pulseScale = 1.3
-            isTransformed = true
-        }
-        
-        // Fade out flash and settle
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            withAnimation(.easeOut(duration: 0.3)) {
-                glowIntensity = 0.0
-                pulseScale = 1.0
+    // MARK: - Transformed State with Timer Ring
+    var transformedView: some View {
+        VStack {
+            Spacer()
+            
+            ZStack {
+                // Background ring
+                Circle()
+                    .stroke(Color.gray.opacity(0.3), lineWidth: 8)
+                    .frame(width: 120, height: 120)
+                
+                // Progress ring
+                Circle()
+                    .trim(from: 0, to: timerProgress)
+                    .stroke(
+                        timerProgress < 0.25 ? Color.red : currentAlien.color,
+                        style: StrokeStyle(lineWidth: 8, lineCap: .round)
+                    )
+                    .frame(width: 120, height: 120)
+                    .rotationEffect(.degrees(-90))
+                    .animation(.linear(duration: 1), value: timerProgress)
+                
+                // Alien icon in center
+                ZStack {
+                    Circle()
+                        .fill(currentAlien.color)
+                        .frame(width: 70, height: 70)
+                    
+                    Image(systemName: currentAlien.symbolName)
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundColor(.black)
+                }
             }
+            
+            Spacer()
+            
+            Text(currentAlien.name.uppercased())
+                .font(.caption)
+                .fontWeight(.bold)
+                .foregroundColor(currentAlien.color)
+                .padding(.bottom, 16)
         }
-        
-        // Start continuous pulse when transformed
-        withAnimation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
-            pulseScale = 1.05
+    }
+    
+    // MARK: - Functions
+    
+    func activateSelection() {
+        WKInterfaceDevice.current().play(.click)
+        withAnimation(.easeInOut(duration: 0.3)) {
+            state = .selecting
         }
-        
-        // Start timer
+        // Reset crown value to match selected index
+        crownValue = Double(selectedAlienIndex)
+    }
+    
+    func transform() {
+        WKInterfaceDevice.current().play(.success)
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+            state = .transformed
+        }
+        timeRemaining = transformationDuration
         startTimer()
     }
     
-    // Timer functions
     func startTimer() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             if timeRemaining > 0 {
                 timeRemaining -= 1
                 
-                // Warning haptics at 10 seconds
-                if timeRemaining == 10 {
+                // Haptic at 5 seconds
+                if timeRemaining == 5 {
                     WKInterfaceDevice.current().play(.notification)
                 }
-                // Urgent haptics in last 3 seconds
+                // Haptic in last 3 seconds
                 else if timeRemaining <= 3 && timeRemaining > 0 {
                     WKInterfaceDevice.current().play(.click)
                 }
             } else {
-                revertTransformation()
+                revertToInactive()
             }
         }
     }
     
-    func revertTransformation() {
-        // Haptic feedback - Double tap for timeout
-        WKInterfaceDevice.current().play(.failure)
-        
+    func revertToInactive() {
         timer?.invalidate()
         timer = nil
         
-        // Flash effect for timeout
-        withAnimation(.easeIn(duration: 0.15)) {
-            glowIntensity = 0.5
+        // Play timeout haptic (watchOS only has haptic feedback, no custom sounds)
+        WKInterfaceDevice.current().play(.failure)
+        
+        // Additional strong haptic for emphasis
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            WKInterfaceDevice.current().play(.failure)
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-            withAnimation(.easeOut(duration: 0.3)) {
-                glowIntensity = 0.0
-            }
+        // Animate back to inactive
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
+            state = .inactive
         }
-        
-        withAnimation(.spring(response: 0.5, dampingFraction: 0.6)) {
-            isTransformed = false
-            pulseScale = 1.0
-        }
-    }
-    
-    func timeString(from timeInterval: TimeInterval) -> String {
-        let minutes = Int(timeInterval) / 60
-        let seconds = Int(timeInterval) % 60
-        return String(format: "%02d:%02d", minutes, seconds)
     }
 }
 
