@@ -72,6 +72,42 @@ struct Alien: Identifiable, Hashable {
             symbolName: "pawprint.fill",
             primaryColor: "yellow",
             description: "A dog-like alien with no eyes but extraordinary senses of hearing and smell."
+        ),
+        Alien(
+            name: "Grey Matter",
+            species: "Galvan",
+            homeworld: "Galvan Prime",
+            abilities: ["Super Intelligence", "Small Size", "Wall Climbing", "Tech Expertise"],
+            symbolName: "brain.fill",
+            primaryColor: "gray",
+            description: "A tiny genius alien with incredible intelligence and problem-solving abilities."
+        ),
+        Alien(
+            name: "Ripjaws",
+            species: "Piscciss Volann",
+            homeworld: "Piscciss",
+            abilities: ["Underwater Breathing", "Sharp Teeth", "Enhanced Swimming", "Bioluminescence"],
+            symbolName: "drop.fill",
+            primaryColor: "teal",
+            description: "An aquatic predator with powerful jaws and the ability to survive in the deepest oceans."
+        ),
+        Alien(
+            name: "Upgrade",
+            species: "Galvanic Mechamorph",
+            homeworld: "Galvan B",
+            abilities: ["Technology Merging", "Body Restructuring", "Laser Beams", "Enhanced Strength"],
+            symbolName: "cpu.fill",
+            primaryColor: "black",
+            description: "A living technology alien that can merge with and upgrade any device."
+        ),
+        Alien(
+            name: "Ghostfreak",
+            species: "Ectonurite",
+            homeworld: "Anur Phaetos",
+            abilities: ["Intangibility", "Invisibility", "Possession", "Flight"],
+            symbolName: "eye.fill",
+            primaryColor: "purple",
+            description: "A ghostly alien with the ability to phase through solid matter and possess others."
         )
     ]
 }
@@ -86,6 +122,10 @@ extension Alien {
         case "cyan": return .cyan
         case "green": return .green
         case "yellow": return .yellow
+        case "gray": return .gray
+        case "teal": return .teal
+        case "purple": return .purple
+        case "black": return .white // White for visibility on dark background
         default: return .green
         }
     }
