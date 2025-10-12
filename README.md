@@ -1,86 +1,100 @@
-# Omnitrix Watch App 🚀
+# Omnitrix Watch App
 
-A Ben 10-inspired Apple Watch app that brings the iconic Omnitrix experience to your wrist!
+A Ben 10-inspired Apple Watch app that recreates the Omnitrix transformation device experience.
 
-![watchOS](https://img.shields.io/badge/watchOS-11.0+-blue.svg)
-![Swift](https://img.shields.io/badge/Swift-6.0-orange.svg)
-![SwiftUI](https://img.shields.io/badge/SwiftUI-5.0-green.svg)
+## 🎯 What It Does
+
+Tap → Browse aliens → Tap alien → Transform with 20s timer → Auto-revert
+
+## 🏗️ Architecture
+
+**MVVM Pattern** with clean separation:
+
+```
+Models/
+  ├── Alien.swift                 # Alien data (name, symbol, color)
+  └── OmnitrixState.swift          # App state enum (inactive/selecting/transformed)
+
+ViewModels/
+  └── OmnitrixViewModel.swift      # State management, timer, haptics
+
+Views/
+  ├── ContentView.swift            # Main coordinator (routes between states)
+  ├── InactiveStateView.swift      # Pulsing Omnitrix logo
+  ├── AlienSelectionView.swift     # Swipeable alien carousel
+  └── TransformedStateView.swift   # Timer ring with alien display
+```
+
+## 🔄 State Flow
+
+```
+Inactive → (tap) → Selecting → (tap alien) → Transformed → (20s timeout) → Inactive
+```
 
 ## 📱 Features
 
-### Current (Phase 1)
-- ✅ Authentic Omnitrix circular interface
-- ✅ Classic green and black color scheme
-- ✅ Lightning bolt core symbol
-- ✅ watchOS optimized design
+### 3 States
+1. **Inactive**: Pulsing green Omnitrix logo, tap to activate
+2. **Selecting**: Swipe or rotate Digital Crown to browse 10 aliens, tap alien to transform
+3. **Transformed**: Circular progress timer (20s), turns red in final 5s, auto-reverts
 
-### Planned Features
-- 🔄 Alien transformation system
-- ⏱️ 10-minute transformation timer
-- 🎵 Sound effects and haptic feedback
-- 👽 Comprehensive alien gallery
-- 🎛️ Digital Crown dial interface
-- ⌚ Watch face complications
+### Aliens (10 from Ben 10 original series)
+Heatblast, Four Arms, XLR8, Diamondhead, Stinkfly, Wildmutt, Grey Matter, Ripjaws, Upgrade, Ghostfreak
 
-## 🛠 Technical Stack
+### Interactions
+- **Tap**: Activate Omnitrix, select alien
+- **Swipe**: Browse aliens (vertical pagination)
+- **Digital Crown**: Alternative browsing (with haptic feedback)
+- **Timer**: 20 seconds, visual ring depletes, turns red at 5s
 
-- **Language:** Swift 6.0
-- **UI Framework:** SwiftUI
-- **Platform:** watchOS 11.0+
-- **Architecture:** MVVM (planned)
-- **Testing:** Swift Testing
+### Haptics
+- Activation: `.click`
+- Transform: `.success`
+- Crown rotation: Built-in per-step
+- 5s warning: `.notification`
+- Final 3s: `.click` per second
+- Timeout: `.failure` x2
 
-## 🚧 Development Phases
+## 🧩 Key Implementation Details
 
-This project follows a structured development approach:
+### Digital Crown Setup
+`.focusable()` must be on the same view as `.digitalCrownRotation()`. Applied to `AlienSelectionView` in `ContentView.swift`.
 
-1. **Phase 1:** Foundation & Basic UI ✅
-2. **Phase 2:** Interactive Elements 🔄
-3. **Phase 3:** Advanced UI & Animation
-4. **Phase 4:** Data Management & Persistence
-5. **Phase 5:** Advanced Features & Polish
-6. **Phase 6:** App Store Preparation
+### Timer Management
+Managed in `OmnitrixViewModel` with proper cleanup to prevent memory leaks. Uses `@Observable` macro for automatic UI updates.
 
-## 🎯 Getting Started
-
-### Prerequisites
-- Xcode 16.0+
-- watchOS 11.0+ Simulator
-- Apple Watch (for device testing)
-
-### Installation
-1. Clone this repository
-```bash
-git clone https://github.com/YOUR_USERNAME/omnitrix-watch-app.git
-cd omnitrix-watch-app
+### Minimal Data Model
+```swift
+struct Alien {
+    let name: String
+    let symbolName: String  // SF Symbol
+    let primaryColor: String
+}
 ```
 
-2. Open in Xcode
-```bash
-open Omnitrix.xcodeproj
-```
+## 🛠 Tech Stack
 
-3. Select Apple Watch simulator and run (⌘R)
+- **Language**: Swift 6.0
+- **UI**: SwiftUI
+- **Target**: watchOS 11.0+
+- **Framework**: WatchKit (haptics)
 
-## 🤝 Contributing
+## 📝 Code Style
 
-This is a learning project, but contributions and suggestions are welcome!
+- MVVM architecture
+- State-driven UI with enums
+- No buttons (tap-to-interact like real Omnitrix)
+- Clean, minimal design
+- Proper separation of concerns
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+## 🚀 Future Ideas
 
-## 📄 License
-
-This project is created for educational purposes. Ben 10 and Omnitrix are trademarks of Cartoon Network.
-
-## 🙏 Acknowledgments
-
-- Inspired by the Ben 10 animated series
-- Built with Apple's SwiftUI framework
-- Created as a learning project for iOS/watchOS development
+- Custom alien images (replace SF Symbols)
+- More aliens (Ben 10 AF, Ultimate)
+- Persistent alien selection
+- Watch face complications
+- Custom transformation animations
 
 ---
 
-**Current Status:** Phase 1 Complete - Basic UI Implementation ✅
+**Status**: Fully functional with proper Digital Crown support and clean architecture.
