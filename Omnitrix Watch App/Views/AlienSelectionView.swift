@@ -13,67 +13,45 @@ struct AlienSelectionView: View {
     let onTransform: () -> Void
     
     var body: some View {
-        VStack(spacing: 8) {
-            Text("SELECT ALIEN")
-                .font(.caption2)
-                .foregroundColor(.green)
-                .padding(.top, 8)
-            
-            Spacer()
-            
-            // Swipeable alien carousel
-            TabView(selection: $selectedIndex) {
-                ForEach(0..<aliens.count, id: \.self) { index in
-                    AlienCard(alien: aliens[index])
-                        .tag(index)
-                }
+        // Swipeable alien carousel - tap alien to transform
+        TabView(selection: $selectedIndex) {
+            ForEach(0..<aliens.count, id: \.self) { index in
+                AlienCard(alien: aliens[index], onTap: onTransform)
+                    .tag(index)
             }
-            .tabViewStyle(.verticalPage)
-            .frame(height: 150)
-            
-            Spacer()
-            
-            // Transform button
-            Button(action: onTransform) {
-                Text("TRANSFORM")
-                    .font(.caption)
-                    .fontWeight(.bold)
-                    .foregroundColor(.black)
-                    .padding(.horizontal, 20)
-                    .padding(.vertical, 8)
-                    .background(Color.green)
-                    .cornerRadius(20)
-            }
-            .buttonStyle(PlainButtonStyle())
-            .padding(.bottom, 16)
         }
+        .tabViewStyle(.verticalPage)
     }
 }
 
 struct AlienCard: View {
     let alien: Alien
+    let onTap: () -> Void
     
     var body: some View {
-        VStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(alien.color)
-                    .frame(width: 80, height: 80)
+        Button(action: onTap) {
+            VStack(spacing: 16) {
+                Spacer()
                 
-                Image(systemName: alien.symbolName)
-                    .font(.system(size: 36, weight: .bold))
-                    .foregroundColor(.black)
+                ZStack {
+                    Circle()
+                        .fill(alien.color)
+                        .frame(width: 90, height: 90)
+                    
+                    Image(systemName: alien.symbolName)
+                        .font(.system(size: 40, weight: .bold))
+                        .foregroundColor(.black)
+                }
+                
+                Text(alien.name.uppercased())
+                    .font(.caption)
+                    .fontWeight(.bold)
+                    .foregroundColor(alien.color)
+                
+                Spacer()
             }
-            
-            Text(alien.name.uppercased())
-                .font(.caption)
-                .fontWeight(.bold)
-                .foregroundColor(alien.color)
-            
-            Text(alien.species)
-                .font(.caption2)
-                .foregroundColor(.secondary)
         }
+        .buttonStyle(PlainButtonStyle())
     }
 }
 
