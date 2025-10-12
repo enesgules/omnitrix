@@ -1,0 +1,94 @@
+//
+//  Alien.swift
+//  Omnitrix Watch App
+//
+//  Created by Abdullah Enes Güleş on 11.10.2025.
+//
+
+import Foundation
+
+struct Alien: Identifiable, Hashable {
+    let id = UUID()
+    let name: String
+    let species: String
+    let homeworld: String
+    let abilities: [String]
+    let symbolName: String // SF Symbol name
+    let primaryColor: String
+    let description: String
+    
+    // Sample aliens from Ben 10
+    static let sampleAliens: [Alien] = [
+        Alien(
+            name: "Heatblast",
+            species: "Pyronite",
+            homeworld: "Pyros",
+            abilities: ["Pyrokinesis", "Flight", "Fire Immunity", "Enhanced Strength"],
+            symbolName: "flame.fill",
+            primaryColor: "orange",
+            description: "A magma-based lifeform that can control fire and withstand extreme heat."
+        ),
+        Alien(
+            name: "Four Arms",
+            species: "Tetramand",
+            homeworld: "Khoros",
+            abilities: ["Super Strength", "Enhanced Durability", "Shock Waves", "Intimidation"],
+            symbolName: "hand.raised.fill",
+            primaryColor: "red",
+            description: "A four-armed humanoid with incredible strength and fighting prowess."
+        ),
+        Alien(
+            name: "XLR8",
+            species: "Kineceleran",
+            homeworld: "Kinet",
+            abilities: ["Super Speed", "Enhanced Reflexes", "Speed Clones", "Wall Running"],
+            symbolName: "bolt.horizontal.fill",
+            primaryColor: "blue",
+            description: "A velociraptor-like alien capable of moving at extreme speeds."
+        ),
+        Alien(
+            name: "Diamondhead",
+            species: "Petrosapien",
+            homeworld: "Petropia",
+            abilities: ["Crystal Manipulation", "Energy Refraction", "Regeneration", "Projectile Creation"],
+            symbolName: "diamond.fill",
+            primaryColor: "cyan",
+            description: "A silicon-based lifeform with a body made of organic diamond."
+        ),
+        Alien(
+            name: "Stinkfly",
+            species: "Lepidopterran",
+            homeworld: "Lepidopterra",
+            abilities: ["Flight", "Slime Projection", "Enhanced Agility", "Prehensile Tail"],
+            symbolName: "ant.fill",
+            primaryColor: "green",
+            description: "An insectoid alien capable of flight and slime generation."
+        ),
+        Alien(
+            name: "Wildmutt",
+            species: "Vulpimancer",
+            homeworld: "Vulpin",
+            abilities: ["Enhanced Senses", "Sharp Claws", "Enhanced Agility", "Prehensile Tongue"],
+            symbolName: "pawprint.fill",
+            primaryColor: "yellow",
+            description: "A dog-like alien with no eyes but extraordinary senses of hearing and smell."
+        )
+    ]
+}
+
+// Extension for color conversion
+extension Alien {
+    var color: Color {
+        switch primaryColor {
+        case "orange": return .orange
+        case "red": return .red
+        case "blue": return .blue
+        case "cyan": return .cyan
+        case "green": return .green
+        case "yellow": return .yellow
+        default: return .green
+        }
+    }
+}
+
+import SwiftUI

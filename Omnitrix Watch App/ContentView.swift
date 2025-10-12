@@ -9,37 +9,53 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack(spacing: 20) {
-            // Omnitrix Core Design
-            ZStack {
-                // Outer ring
-                Circle()
-                    .stroke(Color.green, lineWidth: 4)
-                    .frame(width: 120, height: 120)
-                
-                // Inner core
-                Circle()
-                    .fill(Color.green)
-                    .frame(width: 40, height: 40)
-                
-                // Center symbol
-                Image(systemName: "bolt.fill")
-                    .foregroundColor(.black)
-                    .font(.title2)
+        NavigationStack {
+            GeometryReader { geometry in
+                VStack(spacing: 0) {
+                    Spacer()
+                    
+                    // Omnitrix Core Design - Centered
+                    NavigationLink(destination: AlienListView()) {
+                        ZStack {
+                            // Outer ring
+                            Circle()
+                                .stroke(Color.green, lineWidth: 4)
+                                .frame(width: 100, height: 100)
+                            
+                            // Inner core
+                            Circle()
+                                .fill(Color.green)
+                                .frame(width: 35, height: 35)
+                            
+                            // Center symbol
+                            Image(systemName: "bolt.fill")
+                                .foregroundColor(.black)
+                                .font(.title3)
+                        }
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    
+                    Spacer(minLength: 16)
+                    
+                    // Bottom section - No redundant button!
+                    VStack(spacing: 8) {
+                        Text("OMNITRIX")
+                            .font(.title3)
+                            .fontWeight(.bold)
+                            .foregroundColor(.green)
+                        
+                        Text("Tap to Transform")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            
-            Text("OMNITRIX")
-                .font(.title3)
-                .fontWeight(.bold)
-                .foregroundColor(.green)
-            
-            Text("Ready to Transform")
-                .font(.caption)
-                .foregroundColor(.secondary)
+            .navigationBarHidden(true) // Hide the navigation bar completely
+            .background(Color.black.ignoresSafeArea(.all))
         }
-        .padding()
-        // Black background like the classic Omnitrix
-        .background(Color.black.ignoresSafeArea())
     }
 }
 
