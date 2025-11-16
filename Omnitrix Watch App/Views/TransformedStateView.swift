@@ -11,6 +11,8 @@ struct TransformedStateView: View {
     let alien: Alien
     let progress: Double
     
+    @State private var isBlinking = false
+    
     private var isWarning: Bool {
         progress < 0.25
     }
@@ -25,7 +27,7 @@ struct TransformedStateView: View {
                     .stroke(Color.gray.opacity(0.3), lineWidth: 8)
                     .frame(width: 120, height: 120)
                 
-                // Progress ring
+                // Progress ring with blinking effect
                 Circle()
                     .trim(from: 0, to: progress)
                     .stroke(
@@ -34,6 +36,7 @@ struct TransformedStateView: View {
                     )
                     .frame(width: 120, height: 120)
                     .rotationEffect(.degrees(-90))
+                    .opacity(isWarning && isBlinking ? 0.3 : 1.0)
                     .animation(.linear(duration: 1), value: progress)
                 
                 // Alien icon in center
@@ -42,9 +45,17 @@ struct TransformedStateView: View {
                         .fill(alien.color)
                         .frame(width: 70, height: 70)
                     
-                    Image(systemName: alien.symbolName)
-                        .font(.system(size: 32, weight: .bold))
-                        .foregroundColor(.black)
+                    // Use custom image if available, otherwise SF Symbol
+                    if let imageName = alien.imageName {
+                        Image(imageName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 60, height: 60)
+                    } else {
+                        Image(systemName: alien.symbolName)
+                            .font(.system(size: 32, weight: .bold))
+                            .foregroundColor(.black)
+                    }
                 }
             }
             
@@ -55,6 +66,14 @@ struct TransformedStateView: View {
                 .fontWeight(.bold)
                 .foregroundColor(alien.color)
                 .padding(.bottom, 16)
+        }
+        .onChange(of: isWarning) { _, newValue in
+            if newValue {
+                // Start blinking animation
+                withAnimation(.easeInOut(duration: 0.5).repeatForever(autoreverses: true)) {
+                    isBlinking = true
+                }
+            }
         }
     }
 }

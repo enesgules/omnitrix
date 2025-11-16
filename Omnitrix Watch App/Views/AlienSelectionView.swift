@@ -38,9 +38,17 @@ struct AlienCard: View {
                         .fill(alien.color)
                         .frame(width: 90, height: 90)
                     
-                    Image(systemName: alien.symbolName)
-                        .font(.system(size: 40, weight: .bold))
-                        .foregroundColor(.black)
+                    // Use custom image if available, otherwise SF Symbol
+                    if let imageName = alien.imageName {
+                        Image(imageName)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 70, height: 70)
+                    } else {
+                        Image(systemName: alien.symbolName)
+                            .font(.system(size: 40, weight: .bold))
+                            .foregroundColor(.black)
+                    }
                 }
                 
                 Text(alien.name.uppercased())
