@@ -6,23 +6,23 @@ The screen has a central green hourglass symbol divided into two symmetrical hal
 
 ![Default State](images/default-state.png)
 
-## Active State
+## Transition to Active State
 
-The screen has a central green hourglass symbol divided into two symmetrical halves by a black X-shaped pattern. The inner background is a bright neon green, forming the main glow of the interface.
+The borders of the hourglass symbol go inwards to reveal the alien image. Center always remains green and other parts of the screen are gray. Border is black.
+
+![Transition to Active State](images/transition-to-active-state.png)
+
+## Active Alien Selection State
+
+The screen shows a green diamond shape with a black alien image in the center. There is a black border around the diamond shape. Other parts of the screen are gray.
 
 ![Active State](images/active-state.png)
-
-## Inactive State
-
-The screen has a central green hourglass symbol divided into two symmetrical halves by a black X-shaped pattern. The inner background is a bright neon green, forming the main glow of the interface.
-
-## Alien Selection State
-
-The screen shows an alien image in the center and the name of the alien below it. User can swipe through the aliens or use the digital crown to change the alien.
 
 ## Styling
 
 ### Colors
 
-- Primary Color: #85bf21 (Green)
-- Time out Color: #db1b18 (Red)
+- Primary Background Color: Green
+- Time out Background Color: Red
+- Border Color: Black
+- Outside Border Color: Gray
