@@ -16,32 +16,34 @@ struct ContentView: View {
             switch viewModel.currentState {
             case .inactive:
                 InactiveStateView(onActivate: handleActivation)
-                
+
             case .selecting:
                 AlienSelectionView(
                     selectedIndex: $viewModel.selectedAlienIndex,
                     aliens: viewModel.aliens,
                     onTransform: handleTransformation
                 )
-                .focusable()
-                .digitalCrownRotation(
-                    $crownValue,
-                    from: 0,
-                    through: Double(viewModel.aliens.count - 1),
-                    by: 1,
-                    sensitivity: .medium,
-                    isContinuous: false,
-                    isHapticFeedbackEnabled: true
-                )
-                .onChange(of: crownValue) { _, newValue in
-                    viewModel.selectedAlienIndex = Int(newValue.rounded())
-                }
-                
+
             case .transformed:
                 TransformedStateView(
                     alien: viewModel.currentAlien,
                     progress: viewModel.timerProgress
                 )
+            }
+        }
+        .focusable()
+        .digitalCrownRotation(
+            $crownValue,
+            from: 0,
+            through: Double(viewModel.aliens.count - 1),
+            by: 1,
+            sensitivity: .medium,
+            isContinuous: false,
+            isHapticFeedbackEnabled: true
+        )
+        .onChange(of: crownValue) { _, newValue in
+            if viewModel.currentState == .selecting {
+                viewModel.selectedAlienIndex = Int(newValue.rounded())
             }
         }
         .animation(.easeInOut(duration: 0.3), value: viewModel.currentState)
