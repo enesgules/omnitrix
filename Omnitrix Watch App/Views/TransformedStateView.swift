@@ -13,9 +13,6 @@ struct TransformedStateView: View {
 
     @State private var isBlinking = false
 
-    // Omnitrix timeout red color
-    private let timeoutRed = Color(red: 0.858, green: 0.106, blue: 0.094)
-
     private var isWarning: Bool {
         progress < 0.25
     }
@@ -34,7 +31,7 @@ struct TransformedStateView: View {
                 Circle()
                     .trim(from: 0, to: progress)
                     .stroke(
-                        isWarning ? timeoutRed : Color.accentColor,
+                        isWarning ? Color.red : Color.green,
                         style: StrokeStyle(lineWidth: 8, lineCap: .round)
                     )
                     .frame(width: 120, height: 120)
@@ -45,7 +42,7 @@ struct TransformedStateView: View {
                 // Alien icon in center
                 ZStack {
                     Circle()
-                        .fill(Color.accentColor)
+                        .fill(Color.green)
                         .frame(width: 70, height: 70)
 
                     // Use custom image
@@ -62,7 +59,7 @@ struct TransformedStateView: View {
             Text(alien.name.uppercased())
                 .font(.caption)
                 .fontWeight(.bold)
-                .foregroundColor(Color.accentColor)
+                .foregroundColor(Color.green)
                 .padding(.bottom, 16)
         }
         .onChange(of: isWarning) { _, newValue in
