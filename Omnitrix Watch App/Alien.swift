@@ -11,22 +11,21 @@ import SwiftUI
 struct Alien: Identifiable, Hashable {
     let id = UUID()
     let name: String
-    let symbolName: String
-    let imageName: String?
+    let imageName: String
     let primaryColor: String
     
-    // Sample aliens from Ben 10
-    static let sampleAliens: [Alien] = [
-        Alien(name: "Heatblast", symbolName: "flame.fill", imageName: "heatblast", primaryColor: "orange"),
-        Alien(name: "Four Arms", symbolName: "hand.raised.fill", imageName: "fourarms", primaryColor: "red"),
-        Alien(name: "XLR8", symbolName: "bolt.horizontal.fill", imageName: nil, primaryColor: "blue"),
-        Alien(name: "Diamondhead", symbolName: "diamond.fill", imageName: nil, primaryColor: "cyan"),
-        Alien(name: "Stinkfly", symbolName: "ant.fill", imageName: nil, primaryColor: "green"),
-        Alien(name: "Wildmutt", symbolName: "pawprint.fill", imageName: nil, primaryColor: "yellow"),
-        Alien(name: "Grey Matter", symbolName: "brain.fill", imageName: nil, primaryColor: "gray"),
-        Alien(name: "Ripjaws", symbolName: "drop.fill", imageName: nil, primaryColor: "teal"),
-        Alien(name: "Upgrade", symbolName: "cpu.fill", imageName: nil, primaryColor: "black"),
-        Alien(name: "Ghostfreak", symbolName: "eye.fill", imageName: nil, primaryColor: "purple")
+    // Aliens from Ben 10
+    static let ben10Aliens: [Alien] = [
+        Alien(name: "Heatblast", imageName: "heatblast", primaryColor: "orange"),
+        Alien(name: "Four Arms", imageName: "fourarms", primaryColor: "red"),
+        Alien(name: "XLR8", imageName: "xlr8", primaryColor: "blue"),
+        Alien(name: "Diamondhead", imageName: "diamondhead", primaryColor: "cyan"),
+        Alien(name: "Stinkfly", imageName: "stinkfly", primaryColor: "green"),
+        Alien(name: "Wildmutt", imageName: "wildmutt", primaryColor: "yellow"),
+        Alien(name: "Grey Matter", imageName: "greymatter", primaryColor: "gray"),
+        Alien(name: "Ripjaws", imageName: "ripjaws", primaryColor: "teal"),
+        Alien(name: "Upgrade", imageName: "upgrade", primaryColor: "black"),
+        Alien(name: "Ghostfreak", imageName: "ghostfreak", primaryColor: "purple")
     ]
 }
 

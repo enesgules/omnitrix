@@ -17,7 +17,7 @@ class OmnitrixViewModel {
     private var timer: Timer?
     private let transformationDuration: TimeInterval = 20
     
-    let aliens = Alien.sampleAliens
+    let aliens = Alien.ben10Aliens
     
     var currentAlien: Alien {
         aliens[selectedAlienIndex]

@@ -45,17 +45,12 @@ struct TransformedStateView: View {
                         .fill(alien.color)
                         .frame(width: 70, height: 70)
                     
-                    // Use custom image if available, otherwise SF Symbol
-                    if let imageName = alien.imageName {
-                        Image(imageName)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 60, height: 60)
-                    } else {
-                        Image(systemName: alien.symbolName)
-                            .font(.system(size: 32, weight: .bold))
-                            .foregroundColor(.black)
-                    }
+                    // Use custom image
+                    Image(alien.imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 60, height: 60)
+
                 }
             }
             
@@ -80,7 +75,7 @@ struct TransformedStateView: View {
 
 #Preview {
     TransformedStateView(
-        alien: Alien.sampleAliens[0],
+        alien: Alien.ben10Aliens[0],
         progress: 0.75
     )
 }

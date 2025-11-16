@@ -38,17 +38,13 @@ struct AlienCard: View {
                         .fill(alien.color)
                         .frame(width: 90, height: 90)
                     
-                    // Use custom image if available, otherwise SF Symbol
-                    if let imageName = alien.imageName {
-                        Image(imageName)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 70, height: 70)
-                    } else {
-                        Image(systemName: alien.symbolName)
-                            .font(.system(size: 40, weight: .bold))
-                            .foregroundColor(.black)
-                    }
+                    // Use custom image
+                    Image(alien.imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 60, height: 60)
+
+
                 }
                 
                 Text(alien.name.uppercased())
@@ -66,7 +62,7 @@ struct AlienCard: View {
 #Preview {
     AlienSelectionView(
         selectedIndex: .constant(0),
-        aliens: Alien.sampleAliens,
+        aliens: Alien.ben10Aliens,
         onTransform: {}
     )
 }
