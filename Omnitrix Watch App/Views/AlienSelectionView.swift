@@ -35,9 +35,9 @@ struct AlienCard: View {
                 
                 ZStack {
                     Circle()
-                        .fill(alien.color)
+                        .fill(Color.accentColor)
                         .frame(width: 90, height: 90)
-                    
+
                     // Use custom image
                     Image(alien.imageName)
                         .resizable()
@@ -46,11 +46,11 @@ struct AlienCard: View {
 
 
                 }
-                
+
                 Text(alien.name.uppercased())
                     .font(.caption)
                     .fontWeight(.bold)
-                    .foregroundColor(alien.color)
+                    .foregroundColor(Color.accentColor)
                 
                 Spacer()
             }

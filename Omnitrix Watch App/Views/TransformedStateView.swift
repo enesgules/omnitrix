@@ -10,9 +10,12 @@ import SwiftUI
 struct TransformedStateView: View {
     let alien: Alien
     let progress: Double
-    
+
     @State private var isBlinking = false
-    
+
+    // Omnitrix timeout red color
+    private let timeoutRed = Color(red: 0.858, green: 0.106, blue: 0.094)
+
     private var isWarning: Bool {
         progress < 0.25
     }
@@ -31,20 +34,20 @@ struct TransformedStateView: View {
                 Circle()
                     .trim(from: 0, to: progress)
                     .stroke(
-                        isWarning ? Color.red : alien.color,
+                        isWarning ? timeoutRed : Color.accentColor,
                         style: StrokeStyle(lineWidth: 8, lineCap: .round)
                     )
                     .frame(width: 120, height: 120)
                     .rotationEffect(.degrees(-90))
                     .opacity(isWarning && isBlinking ? 0.3 : 1.0)
                     .animation(.linear(duration: 1), value: progress)
-                
+
                 // Alien icon in center
                 ZStack {
                     Circle()
-                        .fill(alien.color)
+                        .fill(Color.accentColor)
                         .frame(width: 70, height: 70)
-                    
+
                     // Use custom image
                     Image(alien.imageName)
                         .resizable()
@@ -53,13 +56,13 @@ struct TransformedStateView: View {
 
                 }
             }
-            
+
             Spacer()
-            
+
             Text(alien.name.uppercased())
                 .font(.caption)
                 .fontWeight(.bold)
-                .foregroundColor(alien.color)
+                .foregroundColor(Color.accentColor)
                 .padding(.bottom, 16)
         }
         .onChange(of: isWarning) { _, newValue in
