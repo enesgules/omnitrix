@@ -20,13 +20,13 @@ struct TransformedStateView: View {
     var body: some View {
         VStack {
             Spacer()
-            
+
             ZStack {
                 // Background ring
                 Circle()
                     .stroke(Color.gray.opacity(0.3), lineWidth: 8)
                     .frame(width: 120, height: 120)
-                
+
                 // Progress ring with blinking effect
                 Circle()
                     .trim(from: 0, to: progress)
@@ -45,12 +45,11 @@ struct TransformedStateView: View {
                         .fill(Color.green)
                         .frame(width: 70, height: 70)
 
-                    // Use custom image
+                    // Use custom image (larger size)
                     Image(alien.imageName)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 60, height: 60)
-
+                        .frame(width: 65, height: 65)
                 }
             }
 

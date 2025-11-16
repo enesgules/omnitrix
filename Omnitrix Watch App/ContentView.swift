@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @State private var viewModel = OmnitrixViewModel()
     @State private var crownValue: Double = 0.0
-    
+
     var body: some View {
         Group {
             switch viewModel.currentState {
@@ -49,15 +49,15 @@ struct ContentView: View {
         .animation(.easeInOut(duration: 0.3), value: viewModel.currentState)
         .navigationBarHidden(true)
     }
-    
+
     // MARK: - Event Handlers
-    
+
     private func handleActivation() {
         viewModel.activateSelection()
         // Sync crown value with selected index
         crownValue = Double(viewModel.selectedAlienIndex)
     }
-    
+
     private func handleTransformation() {
         viewModel.beginTransformation()
     }

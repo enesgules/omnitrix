@@ -27,31 +27,29 @@ struct AlienSelectionView: View {
 struct AlienCard: View {
     let alien: Alien
     let onTap: () -> Void
-    
+
     var body: some View {
         Button(action: onTap) {
             VStack(spacing: 16) {
                 Spacer()
-                
+
                 ZStack {
                     Circle()
                         .fill(Color.green)
                         .frame(width: 90, height: 90)
 
-                    // Use custom image
+                    // Use custom image (larger size)
                     Image(alien.imageName)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 60, height: 60)
-
-
+                        .frame(width: 80, height: 80)
                 }
 
                 Text(alien.name.uppercased())
                     .font(.caption)
                     .fontWeight(.bold)
                     .foregroundColor(Color.green)
-                
+
                 Spacer()
             }
         }
